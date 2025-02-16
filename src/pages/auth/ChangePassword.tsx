@@ -46,7 +46,7 @@ const ChangePassword: React.FC = () => {
         <div className="h-screen flex items-center justify-center bg-gray-100">
             <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-md">
                 <div className="text-center">
-                    <a href="/login" className="text-sm text-blue-500 hover:text-blue-700">
+                    <a href="/react-dp-prod/login" className="text-sm text-blue-500 hover:text-blue-700">
                         Back to Login
                     </a>
                 </div>

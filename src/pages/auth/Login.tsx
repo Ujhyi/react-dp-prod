@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../configuration/Config.tsx";
 
 
@@ -7,17 +6,12 @@ const Login: React.FC = () => {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [message, setMessage] = useState<string>("");
-    const navigate = useNavigate(); // ✅ React Router for navigation
-
-
-
-
 
     const login = async (e: React.FormEvent) => {
-        e.preventDefault(); // Prevent form reload
+        e.preventDefault();
 
         try {
-            const response = await fetch( `${API_BASE_URL}/Login`, {
+            const response = await fetch(`${API_BASE_URL}/Login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -26,22 +20,24 @@ const Login: React.FC = () => {
             });
 
             const data = await response.json();
-            console.log("Login Response:", data); // Debugging log
+            console.log("🔍 Login Response:", data);
 
-            // ✅ Convert `data.d` to a boolean if necessary
-            const isLoginSuccessful = data?.d === true || data?.d === "true";
+            // Backend response should be `{ d: true }` for success
+            const isLoginSuccessful = data?.d === true;
 
             if (isLoginSuccessful) {
-                setMessage("Login Successful");
-                localStorage.setItem("isLoggedIn", "true"); // Store login state
+                console.log("Login Successful!");
+                localStorage.setItem("isLoggedIn", "true");
+                localStorage.setItem("isAuthenticatedFromServer", "true");
 
-                // ✅ Navigate to home after successful login
-                navigate("/home-page");
+                // Force full page reload to ensure `PrivateRoute.tsx` picks up the new auth state
+                window.location.href = "/home-page";
             } else {
+                console.warn("Login Failed: Invalid credentials");
                 setMessage("Login Failed: Invalid credentials");
             }
         } catch (error) {
-            console.error("Login Error:", error);
+            console.error("⚠Login Error:", error);
             setMessage("Error while logging in. Please check your credentials or try again later.");
         }
     };
@@ -92,7 +88,7 @@ const Login: React.FC = () => {
 
                 {/* Forgot Password Link */}
                 <div className="mt-4 text-center">
-                    <a href="/change-password" className="text-sm text-blue-500 hover:text-blue-700">
+                    <a href="/react-dp-prod/change-password" className="text-sm text-blue-500 hover:text-blue-700">
                         Change Password
                     </a>
                 </div>

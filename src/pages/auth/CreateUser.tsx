@@ -99,7 +99,7 @@ const Register: React.FC = () => {
                 )}
 
                 <div className="text-center mt-5">
-                    <a href="/home-page" className="text-sm text-blue-500 hover:text-blue-700">
+                    <a href="/react-dp-prod/home-page" className="text-sm text-blue-500 hover:text-blue-700">
                         Back to Home
                     </a>
                 </div>
