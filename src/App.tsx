@@ -22,8 +22,6 @@ import Home from "./pages/home/Home.tsx";
 import Login from "./pages/auth/Login.tsx";
 import Register from "./pages/auth/CreateUser.tsx";
 import ChangePassword from "./pages/auth/ChangePassword.tsx";
-import PrivateRoute from "./auth-guard/RouteGuard.tsx";
-
 import {useEffect} from "react";
 
 
@@ -64,6 +62,36 @@ const App: React.FC = () => {
                         <Route path="/" element={<Navigate to="/login" />} />
 
 
+                        <Route path="/monitors" element={<GetMonitors />} />
+                        <Route path="/television" element={<GetTelevision />} />
+                        <Route path="/projectors" element={<GetProjector />} />
+
+                        <Route path="/devices-add" element={<DevicesAdd />} />
+                        <Route path="/devices-management" element={<DevicesManagement />} />
+                        <Route path="/devices-edit" element={<DevicesEdit />} />
+
+                        <Route path="/devices-comparison" element={<DevicesComparison />} />
+
+                        <Route path="/devices-number-of-devices" element={<NumberOfDevices />} />
+                        <Route path="/devices-number-of-devices-tech-information" element={<NumberOfDevicesTechInformation />} />
+
+                        <Route path="/devices-sales-revenue" element={<SalesRevenue />} />
+                        <Route path="/devices-sales-logs" element={<SalesLogs />} />
+
+                        <Route path="/home-page" element={<Home />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/change-password" element={<ChangePassword />} />
+                    </Routes>
+                </Layout>
+            </BrowserRouter>
+        </SidebarProvider>
+    );
+};
+
+export default App;
+
+/*
                         <Route element={<PrivateRoute />}>
                             <Route path="/home-page" element={<Home />} />
                             <Route path="/monitors" element={<GetMonitors />} />
@@ -78,19 +106,4 @@ const App: React.FC = () => {
                             <Route path="/devices-sales-revenue" element={<SalesRevenue />} />
                             <Route path="/devices-sales-logs" element={<SalesLogs />} />
                         </Route>
-
-
-
-
-
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/change-password" element={<ChangePassword />} />
-                    </Routes>
-                </Layout>
-            </BrowserRouter>
-        </SidebarProvider>
-    );
-};
-
-export default App;
+ */
