@@ -1,0 +1,30 @@
+export interface StockData {
+    id: string;
+    brand: string;
+    productType: string;
+    model: string;
+    displaySize: string;
+    refreshRate: string;
+    displayTech: string;
+    pixelResolutions: string;
+    maxResolutions: string;
+    output: string;
+    speaker: string;
+    bluetooth: string;
+    connections: string;
+    wirelessConnections: string;
+    smart: string;
+    os: string;
+    vesa: string;
+    color: string;
+    productionYear: string;
+    stockDate: string;
+    price: string;
+    totalOnStock: string;
+    remains: string;
+    soldNum: string;
+    soldCount: string;
+    remaining: string;
+    stockFromDate: string;
+    stockToEndDate: string;
+}
