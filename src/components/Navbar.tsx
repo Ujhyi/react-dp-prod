@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
         >
             <div className={`flex items-center ${collapsed ? "justify-center" : "pl-2"}`}>
                 <i className="bi bi-bar-chart-fill text-lg"></i>
-                {!collapsed && <span className="ml-2 font-bold truncate">prepord</span>}
+                {!collapsed && <span className="ml-2 font-bold truncate">prod</span>}
             </div>
 
             <hr className="border-t border-gray-700 my-4" />

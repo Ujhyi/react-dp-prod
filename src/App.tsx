@@ -2,7 +2,7 @@
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'*/
 import './App.css';
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes,  } from "react-router-dom";
 import { SidebarProvider } from "./components/SidebarContext.tsx";
 import Navbar from "./components/Navbar.tsx";
 import GetMonitors from "./pages/functions/GetMonitor.tsx";
@@ -27,7 +27,7 @@ import Register from "./pages/auth/CreateUser.tsx";
 import ChangePassword from "./pages/auth/ChangePassword.tsx";
 import {useEffect} from "react";
 
-// ✅ Fix: Define `children` in `Layout` component
+
 interface LayoutProps {
     children: React.ReactNode;
 }
