@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import API_BASE_URL from "../../configuration/Config.tsx";
+import axios from "axios";
 
-const LOGIN_URL = `${API_BASE_URL}/Login`;
+const LOGIN_URL = "https://dp-asmx.com/MyASMXService/WebService.asmx/Login";
 
-
-
+// Function to handle login and store authentication state
 const login = async (username: string, password: string): Promise<boolean> => {
     try {
         const formData = new URLSearchParams();
@@ -30,7 +28,14 @@ const login = async (username: string, password: string): Promise<boolean> => {
         const booleanElement = xmlDoc.getElementsByTagNameNS("http://tempuri.org/", "boolean")[0];
         const isSuccess = booleanElement ? booleanElement.textContent?.trim() === "true" : false;
 
-        console.log("Login response message:", isSuccess);
+        console.log("Login Success:", isSuccess);
+
+        // ✅ Store authentication state in localStorage
+        if (isSuccess) {
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("isAuthenticatedFromServer", "true"); // You can adjust this based on backend response
+        }
+
         return isSuccess;
     } catch (error) {
         console.error("Login error:", error);
@@ -38,20 +43,22 @@ const login = async (username: string, password: string): Promise<boolean> => {
     }
 };
 
+// Login Component
 const Login: React.FC = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loginStatus, setLoginStatus] = useState<string | null>(null);
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // React Router navigation
 
     const handleLogin = async () => {
         const isLoggedIn = await login(username, password);
         if (isLoggedIn) {
-            navigate("/home-page");
+            navigate("/home-page"); // Redirect to home page if login is successful
         } else {
             setLoginStatus("Login failed.");
         }
     };
+
 
     return (
         <div className="h-screen flex items-center justify-center bg-gray-100">
@@ -83,7 +90,7 @@ const Login: React.FC = () => {
                 >
                     Login
                 </button>
-                {loginStatus && <p>{loginStatus}</p>}
+
 
                 {/* Forgot Password Link */}
                 <div className="mt-4 text-center">
@@ -91,6 +98,7 @@ const Login: React.FC = () => {
                         Change Password
                     </a>
                 </div>
+                {loginStatus && <p>{loginStatus}</p>}
             </div>
         </div>
     );

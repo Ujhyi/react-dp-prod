@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const CREATE_USER_URL = "https://dp-asmx.com/MyASMXService/WebService.asmx/CreateUser";
 
@@ -41,7 +40,7 @@ const Register: React.FC = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [registerStatus, setRegisterStatus] = useState<string | null>(null);
-    const navigate = useNavigate(); // React Router navigation
+    //const navigate = useNavigate(); // React Router navigation
 
     const handleRegister = async () => {
         const isCreated = await createUser(username, password);

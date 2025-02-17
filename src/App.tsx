@@ -1,52 +1,36 @@
 import './App.css';
-import {BrowserRouter, Navigate, Route, Routes,} from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { SidebarProvider } from "./components/SidebarContext.tsx";
 import Navbar from "./components/Navbar.tsx";
 import GetMonitors from "./pages/functions/GetMonitor.tsx";
 import GetTelevision from "./pages/functions/GetTelevision.tsx";
 import GetProjector from "./pages/functions/GetProjector.tsx";
-
 import DevicesAdd from "./pages/functions/DevicesAdd.tsx";
 import DevicesManagement from "./pages/functions/DevicesManagement.tsx";
 import DevicesEdit from "./pages/functions/DevicesEdit.tsx";
-
 import DevicesComparison from "./pages/functions/DevicesComparison.tsx";
-
 import NumberOfDevices from "./pages/data_manager/NumberOfDevices.tsx";
 import NumberOfDevicesTechInformation from "./pages/data_manager/NumberOfDevicesTechInformation.tsx";
-
 import SalesRevenue from "./pages/data_manager/SalesRevenue.tsx";
 import SalesLogs from "./pages/data_manager/SalesLogs.tsx";
-
-import Home from "./pages/home/Home.tsx";
-import Login from "./pages/auth/Login.tsx";
 import Register from "./pages/auth/CreateUser.tsx";
 import ChangePassword from "./pages/auth/ChangePassword.tsx";
-import {useEffect} from "react";
+import Home from "./pages/home/Home.tsx";
+import Login from "./pages/auth/Login.tsx";
+import { Outlet } from "react-router-dom";
 
+/** ✅ Layout Component - Wraps all routes EXCEPT login */
+const Layout: React.FC = () => {
+    const location = useLocation();
 
-interface LayoutProps {
-    children: React.ReactNode;
-}
-
-const Layout: React.FC<LayoutProps> = ({ children }) => {
-
-    useEffect(() => {
-        if (window.location.pathname === "/") {
-            window.location.replace("/home-page");
-        }
-    }, []);
-
-
-    const hideNavbarRoutes = ["/react-dp-prod/register", "/react-dp-prod/change-password", "/react-dp-prod/login"];
+    // ✅ Hide Navbar ONLY on the login page
+    const shouldShowNavbar = !["/login", "/change-password"].includes(location.pathname);
 
     return (
         <div className="flex">
-            {/* ✅ Show Navbar only if NOT on login, register, or change-password pages */}
-            {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
-
+            {shouldShowNavbar && <Navbar />} {/* Navbar is hidden on login */}
             <div className="flex-1 transition-all duration-300">
-                {children} {/* ✅ Ensure `children` is used correctly */}
+                <Outlet /> {/* ✅ This is necessary for rendering child routes */}
             </div>
         </div>
     );
@@ -55,55 +39,35 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 const App: React.FC = () => {
     return (
         <SidebarProvider>
-            {/* Use BrowserRouter only once, and set the basename correctly */}
             <BrowserRouter basename="/react-dp-prod">
-                <Layout>
-                    <Routes>
-                        <Route path="/" element={<Navigate to="/login" />} />
+                <Routes>
+                    {/* ✅ Redirect root `/` to `/login` */}
+                    <Route path="/" element={<Navigate to="/login" />} />
 
+                    {/* ✅ Login Page - No Layout */}
+                    <Route path="/login" element={<Login />} />
 
+                    {/* ✅ Wrap protected routes inside `Layout` */}
+                    <Route element={<Layout />}>
+                        <Route path="/home-page" element={<Home />} />
                         <Route path="/monitors" element={<GetMonitors />} />
                         <Route path="/television" element={<GetTelevision />} />
                         <Route path="/projectors" element={<GetProjector />} />
-
                         <Route path="/devices-add" element={<DevicesAdd />} />
                         <Route path="/devices-management" element={<DevicesManagement />} />
                         <Route path="/devices-edit" element={<DevicesEdit />} />
-
                         <Route path="/devices-comparison" element={<DevicesComparison />} />
-
                         <Route path="/devices-number-of-devices" element={<NumberOfDevices />} />
                         <Route path="/devices-number-of-devices-tech-information" element={<NumberOfDevicesTechInformation />} />
-
                         <Route path="/devices-sales-revenue" element={<SalesRevenue />} />
                         <Route path="/devices-sales-logs" element={<SalesLogs />} />
-
-                        <Route path="/home-page" element={<Home />} />
-                        <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/change-password" element={<ChangePassword />} />
-                    </Routes>
-                </Layout>
+                    </Route>
+                </Routes>
             </BrowserRouter>
         </SidebarProvider>
     );
 };
 
 export default App;
-
-/*
-                        <Route element={<PrivateRoute />}>
-                            <Route path="/home-page" element={<Home />} />
-                            <Route path="/monitors" element={<GetMonitors />} />
-                            <Route path="/television" element={<GetTelevision />} />
-                            <Route path="/projectors" element={<GetProjector />} />
-                            <Route path="/devices-add" element={<DevicesAdd />} />
-                            <Route path="/devices-management" element={<DevicesManagement />} />
-                            <Route path="/devices-edit" element={<DevicesEdit />} />
-                            <Route path="/devices-comparison" element={<DevicesComparison />} />
-                            <Route path="/devices-number-of-devices" element={<NumberOfDevices />} />
-                            <Route path="/devices-number-of-devices-tech-information" element={<NumberOfDevicesTechInformation />} />
-                            <Route path="/devices-sales-revenue" element={<SalesRevenue />} />
-                            <Route path="/devices-sales-logs" element={<SalesLogs />} />
-                        </Route>
- */
