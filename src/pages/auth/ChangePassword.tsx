@@ -1,119 +1,116 @@
 import React, { useState } from "react";
-import API_BASE_URL from "../../configuration/Config.tsx";
+import axios from "axios";
 
+const CHANGE_PASSWORD_URL = "https://dp-asmx.com/MyASMXService/WebService.asmx/ChangePassword";
 
-const ChangePassword: React.FC = () => {
-    const [username, setUsername] = useState<string>("");
-    const [oldPassword, setOldPassword] = useState<string>("");
-    const [newPassword, setNewPassword] = useState<string>("");
-    const [passwordChangeSuccess, setPasswordChangeSuccess] = useState<boolean | null>(null);
-    const [, setErrorMessage] = useState<string | null>(null);
+// Function to change user password
+const changePassword = async (
+    username: string,
+    oldPassword: string,
+    newPassword: string
+): Promise<string> => {
+    try {
+        const formData = new URLSearchParams();
+        formData.append("username", username);
+        formData.append("oldPassword", oldPassword);
+        formData.append("newPassword", newPassword);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault(); // Prevent form reload
+        const response = await axios.post<string>(CHANGE_PASSWORD_URL, formData.toString(), {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            responseType: "text",
+        });
 
-        try {
-            const response = await fetch(`${API_BASE_URL}/ChangePassword`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ username, oldPassword, newPassword }),
-            });
+        console.log("Raw XML Response:", response.data);
 
-            const data = await response.json();
-            console.log("Change Password Response:", data);
+        // Parse XML response
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(response.data, "text/xml");
 
-            // ✅ Adjust based on API response
-            if (data?.d === true || data?.d === "true") {
-                setPasswordChangeSuccess(true);
-                setErrorMessage(null);
-                setUsername("");
-                setOldPassword("");
-                setNewPassword("");
-            } else {
-                setPasswordChangeSuccess(false);
-                setErrorMessage("Password change failed. Please check your credentials.");
-            }
-        } catch (error) {
-            console.error("Change Password Error:", error);
-            setPasswordChangeSuccess(false);
-            setErrorMessage("An error occurred while changing your password.");
+        console.log("Parsed XML:", xmlDoc);
+
+        // Check for XML parsing errors
+        const errorNode = xmlDoc.querySelector("parsererror");
+        if (errorNode) {
+            console.error("Error parsing XML:", errorNode.textContent);
+            return "Error parsing server response.";
         }
+
+        // Extract the <boolean> element from XML (if it exists)
+        const booleanElement = xmlDoc.getElementsByTagNameNS("http://tempuri.org/", "boolean")[0];
+        const isSuccess = booleanElement ? booleanElement.textContent?.trim() === "true" : false;
+
+        // Extract <Message> element if available
+        const messageElement = xmlDoc.querySelector("Message");
+        const message = messageElement ? messageElement.textContent?.trim() : null;
+
+        if (isSuccess) {
+            return message || "Password changed successfully!";
+        } else {
+            return message || "Password change failed.";
+        }
+    } catch (error) {
+        console.error("Error changing password:", error);
+        return "Error occurred while changing password.";
+    }
+};
+
+// React Component for changing password
+const ChangePassword: React.FC = () => {
+    const [username, setUsername] = useState("");
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [statusMessage, setStatusMessage] = useState<string | null>(null);
+
+    const handleChangePassword = async () => {
+        const message = await changePassword(username, oldPassword, newPassword);
+        setStatusMessage(message);
     };
 
     return (
         <div className="h-screen flex items-center justify-center bg-gray-100">
             <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-md">
-                <div className="text-center">
+                <h2 className="text-2xl font-bold mb-6 mt-10 text-center">Change Password</h2>
+                <input
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                <br />
+                <input
+                    type="password"
+                    placeholder="Old Password"
+                    value={oldPassword}
+                    onChange={(e) => setOldPassword(e.target.value)}
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                <br />
+                <input
+                    type="password"
+                    placeholder="New Password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                <br />
+                <button
+                    onClick={handleChangePassword}
+                    className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                    Change Password
+                </button>
+                {/* Forgot Password Link */}
+                <div className="mt-4 text-center">
                     <a href="/react-dp-prod/login" className="text-sm text-blue-500 hover:text-blue-700">
-                        Back to Login
+                        Back to login
                     </a>
                 </div>
-                <h2 className="text-2xl font-bold mb-6 text-center mt-2">Change Password</h2>
-
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                            Username
-                        </label>
-                        <input
-                            id="username"
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        />
+                {statusMessage &&
+                    <div className="w-full mt-4 p-4 bg-green-100 border border-green-500 text-green-700 rounded-md">
+                        <p className="text-center">{statusMessage}</p>
                     </div>
-                    <div className="mb-6">
-                        <label htmlFor="old_password" className="block text-sm font-medium text-gray-700">
-                            Old Password
-                        </label>
-                        <input
-                            id="old_password"
-                            type="password"
-                            value={oldPassword}
-                            onChange={(e) => setOldPassword(e.target.value)}
-                            required
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                    <div className="mb-6">
-                        <label htmlFor="new_password" className="block text-sm font-medium text-gray-700">
-                            New Password
-                        </label>
-                        <input
-                            id="new_password"
-                            type="password"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            required
-                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-5"
-                    >
-                        Change Password
-                    </button>
-                </form>
-
-                {/* Display success or error message */}
-                {passwordChangeSuccess !== null && (
-                    <div className="mt-6 text-center">
-                        {passwordChangeSuccess ? (
-                            <div className="w-full mt-4 p-4 bg-green-100 border border-green-500 text-green-700 rounded-md">
-                                <p className="text-center">Password changed successfully!</p>
-                            </div>
-                        ) : (
-                            <div className="w-full mt-4 p-4 bg-red-100 border border-red-500 text-red-700 rounded-md">
-                                <p className="text-center">Password changed un-successfull!</p>
-                            </div>
-                        )}
-                    </div>
-                )}
+                }
             </div>
         </div>
     );

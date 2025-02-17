@@ -68,7 +68,7 @@ const NumberOfDevices: React.FC = () => {
     const [showAll, setShowAll] = useState<boolean>(false);
     const [searchQuery, setSearchQuery] = useState<string>("");
 
-    const countDevicesUrl = `${API_BASE_URL}CountDevices`;
+    const countDevicesUrl = `${API_BASE_URL}/CountDevices`;
     const countDeviceByDateUrl = `${API_BASE_URL}/GetStockInformation_StartDateToEndDate`;
 
     useEffect(() => {
@@ -95,16 +95,19 @@ const NumberOfDevices: React.FC = () => {
         setFilteredStockData(filteredResults);
     }, [searchQuery, allStockData]);
 
+
     const fetchDeviceCounts = async () => {
         try {
             const response = await fetch(countDevicesUrl, {
                 method: "POST",
-                headers: { "Content-Type": "text/xml" }
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
             });
-            const xmlText = await response.text();
-            processDeviceCounts(xmlText);
+
+            const textResponse = await response.text();
+            processDeviceCounts(textResponse);
         } catch (error) {
-            console.error("Error fetching device counts:", error);
+            console.error("Error fetching total sales revenue:", error);
+            alert("An error occurred while fetching total sales revenue.");
         }
     };
 
@@ -129,15 +132,16 @@ const NumberOfDevices: React.FC = () => {
     const fetchCounter = async () => {
         if (!startDate || !endDate) return;
 
-        try {
-            const body = new URLSearchParams();
-            body.set("startDate", convertDateFormat(startDate));
-            body.set("endDate", convertDateFormat(endDate));
+        const formattedStartDate = formatDate(startDate);
+        const formattedEndDate = formatDate(endDate);
 
+        try {
             const response = await fetch(countDeviceByDateUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: body.toString(),
+                body: new URLSearchParams({ startDate: formattedStartDate, endDate: formattedEndDate }),
+
+                //body: body.toString(),
             });
 
             const xmlText = await response.text();
@@ -233,10 +237,13 @@ const NumberOfDevices: React.FC = () => {
     };
     */
 
+    /*
     const convertDateFormat = (date: string): string => {
         const [year, month, day] = date.split("-");
         return `${month}-${day}-${year}`; // ✅ Proper template literal syntax
     };
+
+     */
 
 
     const [collapsed, setCollapsed] = useState(
