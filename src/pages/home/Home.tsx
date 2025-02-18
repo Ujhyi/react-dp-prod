@@ -5,22 +5,17 @@ import { useState, useEffect } from "react";
 const HomePage = () => {
     const navigate = useNavigate();
 
-    // State for sidebar collapsed
     const [collapsed, setCollapsed] = useState(
         localStorage.getItem("sidebarCollapsed") === "true"
     );
 
-    // Sync sidebar state with localStorage
     useEffect(() => {
         const handleSidebarState = () => {
             setCollapsed(localStorage.getItem("sidebarCollapsed") === "true");
         };
-
-        // Listen for localStorage changes (useful for multi-tab scenarios)
         window.addEventListener("storage", handleSidebarState);
 
         return () => {
-            // Cleanup the event listener when the component unmounts
             window.removeEventListener("storage", handleSidebarState);
         };
     }, []);
@@ -28,8 +23,8 @@ const HomePage = () => {
 
     const handleLogout = () => {
         console.log("Logging out...");
-        localStorage.removeItem("isLoggedIn"); // Remove authentication flag
-        window.location.href = "/react-dp-prod/login"; // Force redirect to login
+        localStorage.removeItem("isLoggedIn");
+        window.location.href = "/react-dp-prod/login";
     };
 
     const handleCreateUser = () => {
@@ -38,22 +33,18 @@ const HomePage = () => {
 
     return (
         <div className="flex">
-            {/* Main Content Wrapper */}
             <div
                 className={`transition-all duration-300 ${
                     collapsed ? "ml-20" : "ml-64"
                 } w-full`}
             >
-                {/* Top Header */}
                 <div
                     className="bg-gray-900 w-full h-20 fixed top-0 flex items-center shadow-md pl-8 pr-8 justify-between transition-all duration-300">
                     <h1 className="text-2xl font-bold text-white flex items-center">
                         <i className="bi bi-sun mr-4"></i> Home Page
                     </h1>
 
-                    {/* Buttons */}
                     <div className="fixed top-5.5 right-5 sm:right-25 md:right-20 lg:right-12.5 flex gap-4">
-                        {/* Logout Button */}
                         <button
                             onClick={handleLogout}
                             className="bg-gray-800 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500 w-27 sm:w-48 md:w-64 lg:w-70 hover:bg-red-700 transition-all"
@@ -61,7 +52,6 @@ const HomePage = () => {
                             Logout
                         </button>
 
-                        {/* Create User Button */}
                         <button
                             onClick={handleCreateUser}
                             className="bg-gray-800 text-white rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-green-200 w-27 sm:w-48 md:w-64 lg:w-70 hover:bg-green-700 transition-all"

@@ -19,7 +19,6 @@ import Login from "./pages/auth/Login.tsx";
 import AuthGuard from "./components/AuthGuard.tsx";
 import { Outlet } from "react-router-dom";
 
-/** ✅ Layout Component - Wraps all routes EXCEPT login */
 const Layout: React.FC = () => {
     return (
         <div className="flex">
@@ -36,13 +35,10 @@ const App: React.FC = () => {
         <SidebarProvider>
             <BrowserRouter basename="/react-dp-prod">
                 <Routes>
-                    {/* ✅ Redirect root `/` to `/login` */}
                     <Route path="/" element={<Navigate to="/login" />} />
 
-                    {/* ✅ Login Page - No Layout */}
                     <Route path="/login" element={<Login />} />
 
-                    {/* ✅ Protected Routes - Requires Authentication */}
                     <Route element={<AuthGuard />}>
                         <Route element={<Layout />}>
                             <Route path="/home-page" element={<Home />} />
