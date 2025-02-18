@@ -38,6 +38,7 @@ const App: React.FC = () => {
                     <Route path="/" element={<Navigate to="/login" />} />
 
                     <Route path="/login" element={<Login />} />
+                    <Route path="/change-password" element={<ChangePassword />} />
 
                     <Route element={<AuthGuard />}>
                         <Route element={<Layout />}>
@@ -54,7 +55,6 @@ const App: React.FC = () => {
                             <Route path="/devices-sales-revenue" element={<SalesRevenue />} />
                             <Route path="/devices-sales-logs" element={<SalesLogs />} />
                             <Route path="/register" element={<Register />} />
-                            <Route path="/change-password" element={<ChangePassword />} />
                         </Route>
                     </Route>
                 </Routes>
