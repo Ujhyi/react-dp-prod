@@ -25,9 +25,11 @@ const HomePage = () => {
         };
     }, []);
 
+
     const handleLogout = () => {
-        // Perform any logout operations here (e.g., clearing tokens, session data)
-        navigate("/login");
+        console.log("Logging out...");
+        localStorage.removeItem("isLoggedIn"); // Remove authentication flag
+        window.location.href = "/react-dp-prod/login"; // Force redirect to login
     };
 
     const handleCreateUser = () => {

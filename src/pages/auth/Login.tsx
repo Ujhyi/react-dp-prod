@@ -30,18 +30,22 @@ const login = async (username: string, password: string): Promise<boolean> => {
 
         console.log("Login Success:", isSuccess);
 
-        // ✅ Store authentication state in localStorage
+        // ✅ Store authentication state in localStorage only if login is successful
         if (isSuccess) {
             localStorage.setItem("isLoggedIn", "true");
-            localStorage.setItem("isAuthenticatedFromServer", "true"); // You can adjust this based on backend response
+        } else {
+            localStorage.removeItem("isLoggedIn");
         }
 
         return isSuccess;
     } catch (error) {
         console.error("Login error:", error);
+        localStorage.removeItem("isLoggedIn"); // Prevent unintended access if error occurs
         return false;
     }
 };
+
+
 
 // Login Component
 const Login: React.FC = () => {
