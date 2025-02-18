@@ -284,7 +284,7 @@ const NumberOfDevices: React.FC = () => {
                                 <thead className="bg-blue-100 text-blue-700 font-semibold uppercase text-sm">
                                 <tr>
                                     <th className="py-3 px-5 text-left" colSpan={5}>
-                                        Device .... not defined
+                                        TOTAL COUNT OF MODEL FOR EACH CATEGORY
                                     </th>
                                 </tr>
                                 </thead>
@@ -293,7 +293,7 @@ const NumberOfDevices: React.FC = () => {
                                 <thead className="bg-gray-700 text-white font-semibold uppercase text-sm">
                                 <tr>
                                     <th className="py-4 px-5 text-left w-1/2">Product Type</th>
-                                    <th className="py-4 px-5 text-center w-1/2">Revenue</th>
+                                    <th className="py-4 px-5 text-center w-1/2">Count</th>
                                 </tr>
                                 </thead>
 
@@ -427,7 +427,7 @@ const NumberOfDevices: React.FC = () => {
                                                             <p className="text-gray-700 text-sm"><strong>Sold (Period):</strong> {product.soldCount}</p>
                                                             <p className="text-gray-700 text-sm"><strong>Remaining (Period):</strong> {product.remaining}</p>
                                                             <p className="text-gray-700 text-sm"><strong>Stock From: </strong> {product.stockFromDate}</p>
-                                                            <p className="text-gray-700 text-sm"><strong>Stock To: </strong> {product.stockToEndDate}</p>
+                                                            <p className="text-gray-700 text-sm"><strong>Stock To: </strong> {product.stockToDate}</p>
                                                         </div>
                                                     </div>
                                                 )}

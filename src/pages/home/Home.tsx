@@ -24,7 +24,7 @@ const HomePage = () => {
     const handleLogout = () => {
         console.log("Logging out...");
         localStorage.removeItem("isLoggedIn");
-        window.location.href = "/react-dp-prod/login";
+        window.location.href = "/react-dp-prod/#/login";
     };
 
     const handleCreateUser = () => {

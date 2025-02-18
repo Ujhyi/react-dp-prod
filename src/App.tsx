@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import { SidebarProvider } from "./components/SidebarContext.tsx";
 import Navbar from "./components/Navbar.tsx";
 import GetMonitors from "./pages/functions/GetMonitor.tsx";
@@ -19,6 +19,7 @@ import Login from "./pages/auth/Login.tsx";
 import AuthGuard from "./components/AuthGuard.tsx";
 import { Outlet } from "react-router-dom";
 
+
 const Layout: React.FC = () => {
     return (
         <div className="flex">
@@ -33,10 +34,9 @@ const Layout: React.FC = () => {
 const App: React.FC = () => {
     return (
         <SidebarProvider>
-            <BrowserRouter basename="/react-dp-prod">
+            <HashRouter> {/* Removed basename */}
                 <Routes>
                     <Route path="/" element={<Navigate to="/login" />} />
-
                     <Route path="/login" element={<Login />} />
                     <Route path="/change-password" element={<ChangePassword />} />
 
@@ -58,9 +58,10 @@ const App: React.FC = () => {
                         </Route>
                     </Route>
                 </Routes>
-            </BrowserRouter>
+            </HashRouter>
         </SidebarProvider>
     );
 };
+
 
 export default App;

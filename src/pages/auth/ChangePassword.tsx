@@ -102,7 +102,7 @@ const ChangePassword: React.FC = () => {
                 </button>
                 {/* Forgot Password Link */}
                 <div className="mt-4 text-center">
-                    <a href="/react-dp-prod/login" className="text-sm text-blue-500 hover:text-blue-700">
+                    <a href="/react-dp-prod/#/login" className="text-sm text-blue-500 hover:text-blue-700">
                         Back to login
                     </a>
                 </div>
