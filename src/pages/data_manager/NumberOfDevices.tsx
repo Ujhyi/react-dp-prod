@@ -66,7 +66,7 @@ const StockInfo: React.FC = () => {
     const [summaryData, setSummaryData] = useState<SummaryData | null>(null);
 
 
-    const countDevicesUrl = `${API_BASE_URL}/CountDevices`;
+    const countDevicesUrl = "https://dp-asmx.com/MyASMXService/WebService.asmx/CountDevices";
 
     useEffect(() => {
         fetchDeviceCounts();
@@ -74,10 +74,17 @@ const StockInfo: React.FC = () => {
 
     const fetchDeviceCounts = async () => {
         try {
+            const params = new URLSearchParams();
+            params.append("dummyParam", "value"); // Some ASMX services require at least one param
+
             const response = await fetch(countDevicesUrl, {
                 method: "POST",
-                headers: { "Content-Type": "text/xml" }
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded", // Avoids CORS preflight
+                },
+                body: params.toString(), // Convert to URL-encoded format
             });
+
             const xmlText = await response.text();
             processDeviceCounts(xmlText);
         } catch (error) {
@@ -122,7 +129,7 @@ const StockInfo: React.FC = () => {
             params.append("sortOrder", sortOrder);
 
             const response = await axios.post(
-                "http://localhost:51834/WebService.asmx/GetStockInformation_StartToEnd_NOD",
+                "https://dp-asmx.com/MyASMXService/WebService.asmx/GetStockInformation_StartToEnd_NOD",
                 params,
                 {
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },

@@ -105,7 +105,7 @@ const StockInfo: React.FC = () => {
             params.append("displaySizeSortOrder", displaySizeSortOrder);
 
             const response = await axios.post(
-                "http://localhost:51834/WebService.asmx/GetStockInformation_StartToEnd_NOD_TI_1",
+                "https://dp-asmx.com/MyASMXService/WebService.asmx/GetStockInformation_StartToEnd_NOD_TI_1",
                 params,
                 {
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
